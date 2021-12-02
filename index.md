@@ -49,6 +49,11 @@ function draw() {
 }
 ```
 
+I'll run a local webserver with Python (there are *numerous* ways to do this, I use Python regularly and am lazy in installing other methods ... this also works).
+
+`$ python3 -m http.server`
+
+This creates a simple webserver on port 8000, so you can easily pop open Firefox and visit 127.0.0.1:8000 (or localhost:8000, if you're not into the whole verbosity thing).  The sketch will run once and bail when it hits the end case and then generate a `tar` archive of your PNGs.  Extract it somewhere you know and love and then you'll have a directory full of PNG images.
 
 I then stick the PNGs together with [gifski](https://gif.ski/), a delightful terminal application for creating high-quality gifs. Usually, my terminal resembles the following:
 
