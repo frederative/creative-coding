@@ -12,7 +12,7 @@ the intent of this piece was to center particles around a logarithm and let them
 
 # helper classes
 
-* Recording: [CCapture.js](https://github.com/spite/ccapture.js)
+## Recording: [CCapture.js](https://github.com/spite/ccapture.js)
 
 This one took me a while to get setup, and for some reason it **only** works for me in Firefox (Chrome chokes on it).  Here are the relevant lines of code I insert to make this work (note: most of this is defined in the CCapture page as well).
 
@@ -64,3 +64,66 @@ $ gifski --output mygif.gif --fps 30 --quality 100 *.png
 ```
 
 Sometimes I toss on an ` && rm *.png` as well, but be warned that this command deletes all the images in that directory.
+
+## Particles
+
+This is just a homebrew little Particle class that I use to give each particle the ability to do its own thing. I am 100% certain there are better (i.e., performant) ways to do this, but this is quick and dirty and gets the job done.
+
+```
+let particles;
+class Particle {
+  constructor(x, y, vx, vy, col, size) {
+    this.position = createVector(x, y);
+    this.velocity = createVector(vx, vy);
+    this.color = col;
+    this.size = size;
+  }
+  
+  // return true if in-bounds, false otherwise
+  update() {
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+    if (this.position.x < 0 || this.position.x > width || this.position.y < 0 || this.position.y > heigh)
+      return false;
+    return true;
+  }
+  
+  // circle-friends
+  draw() {
+    noStroke();
+    fill(this.color);
+    circle(this.x, this.y, this.size);
+  }
+}
+
+function setup() {
+  let num_particles = 42;
+  particles = [];
+  // add particles
+  for (let i = 0; i < num_particles; i++) {
+    particles.push(new Particle(
+      random(width), random(height); // position
+      random(-5, 5), random(-5, 5),  // velocity
+      color(random(255)),            // grayscale color
+      random(1, 5)                   // size
+    ));
+  }
+}
+
+function draw() {
+  ...
+  
+  // update, draw, and snip dead particles
+  for (let i = particles.length-1; i >= 0; i--) {
+    let r = particles[i].update();
+    if (r) 
+      particles[i].draw();
+    else
+      particles.slice(i, 1);
+  }
+  if (particles.length === 0) {
+    console.log("done");
+    noLoop();
+  }
+}
+```
