@@ -1,37 +1,61 @@
-## Welcome to GitHub Pages
+# welcome
 
-You can use the [editor on GitHub](https://github.com/frederative/creative-coding/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+hi there!
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+# completed projects
 
-### Markdown
+logarithmic:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+![logarithmic](https://assets.objkt.com/file/assets-001/KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton/5/6/467356/artifact.png)
 
-```markdown
-Syntax highlighted code block
+the intent of this piece was to center particles around a logarithm and let them find their way.  at various points along the curve i let 2 particles loose, one going up (colorful) and one going down (black & white).  each particle had some jank added to their movement to make it look interesting.
 
-# Header 1
-## Header 2
-### Header 3
+# helper classes
 
-- Bulleted
-- List
+* Recording: [CCapture.js](https://github.com/spite/ccapture.js)
 
-1. Numbered
-2. List
+This one took me a while to get setup, and for some reason it **only** works for me in Firefox (Chrome chokes on it).  Here are the relevant lines of code I insert to make this work (note: most of this is defined in the CCapture page as well).
 
-**Bold** and _Italic_ and `Code` text
+**index.html**:
 
-[Link](url) and ![Image](src)
+```
+<script type="text/javascript" src="CCapture.all.min.js"></script>
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+**script.js**
 
-### Jekyll Themes
+```
+// at the top:
+let fps = 30;
+var capturer = new CCapture({ format: 'png', framerate: fps });
+...
+function setup() {
+  ...
+  frameRate(fps);
+}
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/frederative/creative-coding/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+function draw() {
+  if (frameCount === 1) {
+    capturer.start();
+  }
+  ...  
+  if (done) {
+    console.log("done");
+    noLoop();
+    capturer.stop();
+    capturer.save();
+  }
+  capturer.capture(document.getElementById('defaultCanvas0'));
+}
+```
 
-### Support or Contact
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+I then stick the PNGs together with [gifski](https://gif.ski/), a delightful terminal application for creating high-quality gifs. Usually, my terminal resembles the following:
+
+```
+> Be inside the folder of recorded images
+
+$ gifski --output mygif.gif --fps 30 --quality 100 *.png
+```
+
+Sometimes I toss on an ` && rm *.png` as well, but be warned that this command deletes all the images in that directory.
